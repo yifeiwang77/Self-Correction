@@ -1,0 +1,5 @@
+wandb:
+    project: <your-project-name>
+    entity: <your-entity-name>
+    notes:
+    log_every_steps: 10
