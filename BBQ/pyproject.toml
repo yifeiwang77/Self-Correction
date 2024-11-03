@@ -1,0 +1,97 @@
+[tool.black]
+diff = true
+color = true
+# Ignore submodules in the datasets/ directory, which  shouldn't be examined by
+# linters. Other tools use slightly different rules for exclude patterns: some
+# match the entire path, some just the basename. Some use regexes, others
+# don't. Therefore, the syntax for excluding this directory is different for
+# each tool. Each case tries to make the exclude rule as strict as possible
+# (exclude the datasets/ directory in the repository's root), though the logic
+# may not by identical across all tools.
+extend-exclude = '''
+    (
+        ^/datasets/BBQ/$
+        | ^/datasets/winogender-schemas/$
+    )
+'''
+
+[tool.isort]
+profile = "black"
+color_output = true
+extend_skip = [
+    "datasets/BBQ/",
+    "datasets/winogender-schemas/",
+]
+
+[tool.mypy]
+strict = true
+exclude = [
+    '^datasets/BBQ/$',
+    '^datasets/winogender-schemas/$',
+]
+# Check that code is compatible with Python 3.8 and later
+python_version = "3.8"
+
+[[tool.mypy.overrides]]
+module = "matplotlib.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "scipy.*"
+ignore_missing_imports = true
+
+[tool.pylint.main]
+# Discover python modules and packages in the file system subtree.
+recursive = true
+ignore-paths = [
+    "datasets/BBQ/",
+    "datasets/winogender-schemas/",
+]
+
+[tool.pylint.basic]
+# Require docstrings for classes and methods of at least 10 lines.
+docstring-min-length = 10
+# Don't require docstrings for methods starting with `_`, which are not
+# considered part of the public API and are less important to document. Also
+# exclude classes starting with `Test`, which are used for unit testing.
+# Docstrings for test methods are required since they are displayed when the
+# test fails.
+no-docstring-rgx = "^_|^Test"
+
+[tool.pylint.design]
+# Minimum number of public methods for a class
+min-public-methods = 0
+
+[tool.pylint.format]
+# Maximum number of characters on a single line. 88 is black's default.
+max-line-length = 88
+
+[tool.pylint."messages control"]
+# Disable the message, report, category or checker with the given id(s). You can
+# either give multiple identifiers separated by comma (,) or put this option
+# multiple times (only on the command line, not in the configuration file where
+# it should appear only once). You can also use "--disable=all" to disable
+# everything first and then re-enable specific checks. For example, if you want
+# to run only the similarities checker, you can use "--disable=all
+# --enable=similarities". If you want to run only the classes checker, but have
+# no Warning level messages displayed, use "--disable=all --enable=classes
+# --disable=W".
+disable = ["missing-module-docstring"]
+# Warn about unused disable comments in code
+enable = ["useless-suppression"]
+
+[tool.pylint.reports]
+output-format = "colorized"
+
+[tool.pylint.string]
+# This flag controls whether inconsistent-quotes generates a warning when the
+# character used as a quote delimiter is used inconsistently within a module.
+check-quote-consistency = true
+
+[tool.pylint.typecheck]
+# Tell pylint about auto-generated attributes
+generated-members = ["__dataclass_fields__"]
+
+[tool.pylint.variables]
+# Controls whether we should check for unused import in __init__ files.
+init-import = true
